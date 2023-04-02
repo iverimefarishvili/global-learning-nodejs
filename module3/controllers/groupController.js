@@ -1,19 +1,11 @@
-const {userSchema} = require('../utils/validateUser');
+const validateGroup = require('../utils/validateGroup').validateGroup;
 
 const db = require("../config/index");
-const Users = db.users;
-
-const wrapWithTryCatch = fn => async (req, res, next) => {
-  try {
-    await fn(req, res, next);
-  } catch (error) {
-    next(error);
-  }
-};
+const Groups = db.groups;
 
 module.exports = {
-    async getUsers(req, res) {
-      Users.findAll()
+    async getGroups(req, res) {
+      Groups.findAll()
         .then(data => {
           res.send(data);
         })
@@ -24,10 +16,10 @@ module.exports = {
           });
         });
     },
-    async getUser(req, res) {
+    async getGroup(req, res) {
       const id = req.params.id;
 
-      Users.findByPk(id)
+      Groups.findByPk(id)
         .then(data => {
           res.send(data);
         })
@@ -37,19 +29,14 @@ module.exports = {
           });
         });
     },
-    async postUser(req, res) {
-      const { error } = userSchema.validate(req.body);
-
-      if (error) return res.status(400).send(error.details[0].message);
-    
+    async postGroup(req, res) {
       const user = {
-        login: req.body.login,
-        password: req.body.password,
-        age: req.body.age,
-        is_deleted: req.body.is_deleted,
+        id: req.body.id,
+        name: req.body.name,
+        permissions: req.body.permissions
       };
     
-      Users.create(user)
+      Groups.create(user)
         .then(data => {
           res.send(data);
         })
@@ -60,13 +47,13 @@ module.exports = {
           });
         });
     },
-    async updateUser(req, res) {
+    async updateGroup(req, res) {
       const id = req.params.id;
 
-      const { error } = userSchema.validate(req.body);
-      if (error) return res.status(400).send(error.details[0].message);
-
-      Users.update(req.body, {
+    //   const { error } = validateGroup(req.body);
+    //   if (error) return res.status(400).send(error.details[0].message);
+      
+      Groups.update(req.body, {
         where: { id: id }
       })
         .then(num => {
@@ -86,10 +73,10 @@ module.exports = {
           });
         });
     },
-    async deleteUser(req, res) {
+    async deleteGroup(req, res) {
       const id = req.params.id;
 
-      Users.destroy({
+      Groups.destroy({
         where: { id: id }
       })
         .then(num => {
@@ -109,7 +96,4 @@ module.exports = {
           });
         });
     },
-    async addUserToGroup(userId, groupId) {
-      Users.addGroup(userId, groupId);
-    }
 };

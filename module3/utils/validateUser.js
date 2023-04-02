@@ -5,7 +5,7 @@ const userSchema = Joi.object({
   login: Joi.string().required(),
   password: Joi.string().regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/).required(),
   age: Joi.number().min(4).max(130).required(),
-  isDeleted: Joi.boolean().required()
+  is_deleted: Joi.boolean().required()
 });
 
 const loginSchema = Joi.object({
