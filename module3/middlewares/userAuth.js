@@ -4,22 +4,22 @@ const User = db.users;
 
 const saveUser = async (req, res, next) => {
     try {
-        const username = await User.findOne({
+        const login = await User.findOne({
             where: {
-            userName: req.body.userName,
+                login: req.body.login,
             },
         });
-        if (username) {
-            return res.json(409).send("username already taken");
+        if (login) {
+            return res.json(409).send("login already taken");
         }
 
-        const emailcheck = await User.findOne({
+        const password = await User.findOne({
             where: {
-            email: req.body.email,
+                email: req.body.password,
             },
         });
 
-        if (emailcheck) {
+        if (password) {
             return res.json(409).send("Authentication failed");
         }
 

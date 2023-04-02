@@ -6,10 +6,9 @@ const User = db.users;
 
 const signup = async (req, res) => {
  try {
-   const { userName, email, password } = req.body;
+   const { login, password } = req.body;
    const data = {
-     userName,
-     email,
+     login,
      password: await bcrypt.hash(password, 10),
    };
    const user = await User.create(data);
@@ -34,18 +33,17 @@ const signup = async (req, res) => {
 
 const login = async (req, res) => {
  try {
-   const { email, password } = req.body;
+   const { login, password } = req.body;
 
    const user = await User.findOne({
-     where: {
-     email: email
-   } 
-     
+    where: {
+        login: login
+    } 
    });
-
+   console.log("user", user)
    if (user) {
-     const isSame = await bcrypt.compare(password, user.password);
-
+    //  const isSame = await bcrypt.compare(password, user.password);
+     const isSame = password == user.password;
      if (isSame) {
        let token = jwt.sign({ id: user.id }, process.env.secretKey, {
          expiresIn: 1 * 24 * 60 * 60 * 1000,

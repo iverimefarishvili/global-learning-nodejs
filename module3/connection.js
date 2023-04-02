@@ -1,9 +1,8 @@
 const { Client } = require('pg')
- 
-const connectionString = 'postgres://postgres:1234@localhost:5432/global-node';
+require('dotenv').config();
 
 const client = new Client({
-    connectionString: connectionString
+    connectionString: process.env.CONNECTION_STRING
 });
 
 client.connect();

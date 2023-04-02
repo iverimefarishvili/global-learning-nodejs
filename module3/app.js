@@ -1,6 +1,9 @@
 module.exports = db => {
   const path = require('path');
   const express = require('express');
+  const authenticateJWT = require('./middlewares/authhenticateJWT');
+
+  var cors = require('cors')
 
   const app = express();
   const userRoutes = require('./routes/userRoutes')(db);
@@ -20,6 +23,10 @@ module.exports = db => {
     });
 
   app.use(express.urlencoded());
+
+  app.use(cors())
+
+  app.all('*', authenticateJWT);
   app.use(userRoutes);
   app.use(groupRoutes);
   app.use(notFound);
